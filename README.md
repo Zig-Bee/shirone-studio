@@ -42,8 +42,11 @@ Studio 不直接重写 `data/*.ts` 或主题实现文件。
 
 ```bash
 npm run check
+npm run check:content
 npm run build
 ```
+
+`check:content` 会检查当前内容仓的文章/说说必填字段，以及正文和 frontmatter 中的本地媒体引用。
 
 部署前可显式指定内容仓和博客地址：
 

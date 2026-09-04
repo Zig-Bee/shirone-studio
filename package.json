@@ -8,6 +8,7 @@
     "dev": "node scripts/dev.mjs",
     "build": "node scripts/build.mjs",
     "check": "node --test tests/*.test.mjs",
+    "check:content": "node scripts/validate-content.mjs",
     "start": "node scripts/dev.mjs"
   },
   "engines": {

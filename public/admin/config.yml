@@ -21,6 +21,9 @@ slug:
   clean_accents: true
   sanitize_replacement: '-'
 
+media_folder: /public/images/uploads
+public_folder: /images/uploads
+
 media_libraries:
   default:
     config:

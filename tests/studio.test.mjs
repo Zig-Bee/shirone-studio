@@ -19,6 +19,13 @@ test("Shirone collections use content repository paths", () => {
   assert.match(config, /path: '\{\{slug\}\}\/index'/);
 });
 
+test("media storage has a global fallback and collection-specific paths", () => {
+  assert.match(config, /^media_folder: \/public\/images\/uploads$/m);
+  assert.match(config, /^public_folder: \/images\/uploads$/m);
+  assert.match(config, /name: posts[\s\S]*?media_folder: ''[\s\S]*?public_folder: ''/);
+  assert.match(config, /name: moments[\s\S]*?media_folder: \/public\/images\/moments[\s\S]*?public_folder: \/images\/moments/);
+});
+
 test("CMS configuration contains no committed credentials", () => {
   assert.doesNotMatch(config, /(client_secret|access_token|password:)\s*[^#\s]/i);
 });

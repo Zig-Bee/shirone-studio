@@ -28,9 +28,15 @@
         <li>编辑并保存后，内容会直接写入本地内容仓。</li>
       </ol>
       <h2>云端编辑</h2>
-      <p>内容仓推送到你自己的 GitHub 私有仓库后，把 Studio 的仓库配置替换为实际的 <code>OWNER/REPO</code>。云端 Studio 登录 GitHub 后即可直接保存并触发博客构建。</p>
+      <ol>
+        <li>打开线上编辑器并点击 <strong>Sign In with Token</strong>。</li>
+        <li>按登录框中的 GitHub 链接创建令牌；令牌只授予 <code>Zig-Bee/shirone-content</code> 内容读写权限。</li>
+        <li>选择“文章”“说说”“固定页面”或“基础设置”进行编辑，保存会直接提交到私有内容仓。</li>
+      </ol>
       <h2>文章图片</h2>
       <p>新文章使用 <code>content/posts/文章名/index.md</code>，封面和正文图片与文章放在同一个文件夹，正文使用 <code>./图片名.webp</code> 引用。</p>
+      <h2>本机同步与检查</h2>
+      <p>在线保存后，先在 <code>shirone-content</code> 中执行 <code>git pull</code>，再到 Shirone 执行 <code>pnpm content sync</code>。完整中文说明已作为“Shirone Studio 使用指南”草稿加入文章列表。</p>
     </main>
   </body>
 </html>
