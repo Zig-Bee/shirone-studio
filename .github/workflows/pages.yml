@@ -33,7 +33,7 @@ jobs:
           SHIRONE_SITE_URL: ${{ vars.SHIRONE_SITE_URL }}
         run: |
           npm run check
-          SHIRONE_SITE_URL="${SHIRONE_SITE_URL:-https://example.com}" npm run build
+          SHIRONE_SITE_URL="${SHIRONE_SITE_URL:-http://127.0.0.1:4322}" npm run build
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
