@@ -1,0 +1,193 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.205.3/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: local/shirone-content
+  branch: main
+  auth_methods: [token]
+  commit_messages:
+    create: 'content: 创建{{collection}}“{{slug}}”'
+    update: 'content: 更新{{collection}}“{{slug}}”'
+    delete: 'content: 删除{{collection}}“{{slug}}”'
+    uploadMedia: 'content: 上传“{{path}}”'
+    deleteMedia: 'content: 删除“{{path}}”'
+
+site_url: http://127.0.0.1:4322
+display_url: http://127.0.0.1:4322
+show_preview_links: true
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+media_libraries:
+  default:
+    config:
+      max_file_size: 10485760
+      slugify_filename: true
+
+collections:
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    icon: article
+    folder: content/posts
+    create: true
+    extension: md
+    format: frontmatter
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    preview_path: '/posts/{{dirname}}/'
+    identifier_field: title
+    summary: '{{title}} · {{published}}'
+    sortable_fields:
+      fields: [published, updated, title]
+      default:
+        field: published
+        direction: descending
+    view_filters:
+      - label: 草稿
+        field: draft
+        pattern: '^true$'
+      - label: 已发布
+        field: draft
+        pattern: '^false$'
+      - label: 置顶
+        field: pinned
+        pattern: '^true$'
+    editor:
+      preview: false
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 发布日期, name: published, widget: datetime, type: date }
+      - { label: 精确发布时间, name: publishedAt, widget: datetime, required: false, hint: 同一天发布多篇文章时才需要 }
+      - { label: 更新日期, name: updated, widget: datetime, type: date, required: false }
+      - { label: 精确更新时间, name: updatedAt, widget: datetime, required: false }
+      - { label: 摘要, name: description, widget: text, required: false, default: '' }
+      - { label: 封面, name: image, widget: image, required: false, hint: 推荐上传到文章目录并使用相对路径 }
+      - { label: 分类, name: category, widget: string, required: false, default: '' }
+      - label: 标签
+        name: tags
+        widget: list
+        required: false
+        default: []
+        field: { label: 标签, name: tag, widget: string }
+      - label: 文章语言
+        name: lang
+        widget: select
+        required: false
+        default: ''
+        options:
+          - { label: 跟随站点, value: '' }
+          - { label: 简体中文, value: zh_CN }
+          - { label: 繁體中文, value: zh_TW }
+          - { label: English, value: en }
+          - { label: 日本語, value: ja }
+      - { label: 草稿, name: draft, widget: boolean, default: true }
+      - { label: 置顶, name: pinned, widget: boolean, default: false }
+      - { label: 开启评论, name: comment, widget: boolean, default: true }
+      - { label: URL 别名, name: alias, widget: string, required: false, hint: 可选，例如 old-post-name }
+      - { label: 自定义永久链接, name: permalink, widget: string, required: false, hint: 可选，例如 notes/my-post }
+      - { label: 加密文章, name: encrypted, widget: boolean, default: false }
+      - { label: 访问密码, name: password, widget: string, required: false }
+      - { label: 密码提示, name: passwordHint, widget: string, required: false, default: '' }
+      - { label: 在首页隐藏正文, name: hideHomeContent, widget: boolean, default: true }
+      - label: 正文
+        name: body
+        widget: richtext
+        modes: [raw, rich_text]
+        hint: Shirone 扩展语法和 MDX 请使用源码模式；保存后在博客预览中确认效果
+
+  - name: moments
+    label: 说说
+    label_singular: 说说
+    icon: chat
+    folder: content/moments
+    create: true
+    extension: md
+    format: frontmatter
+    path: '{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}{{second}}'
+    identifier_field: published
+    summary: '{{published}} · {{location}}'
+    media_folder: /public/images/moments
+    public_folder: /images/moments
+    preview_path: /moments/
+    editor:
+      preview: false
+    fields:
+      - { label: 发布时间, name: published, widget: datetime }
+      - { label: 草稿, name: draft, widget: boolean, default: true }
+      - { label: 置顶, name: pinned, widget: boolean, default: false }
+      - { label: 地点, name: location, widget: string, required: false, default: '' }
+      - { label: 心情图标, name: mood, widget: string, required: false, default: '', hint: 例如 material-symbols:sentiment-excited-outline-rounded }
+      - label: 标签
+        name: tags
+        widget: list
+        required: false
+        default: []
+        field: { label: 标签, name: tag, widget: string }
+      - label: 图片
+        name: images
+        widget: list
+        required: false
+        default: []
+        fields:
+          - { label: 图片, name: src, widget: image }
+          - { label: 替代文本, name: alt, widget: string, required: false, default: '' }
+      - { label: 正文, name: body, widget: richtext, modes: [raw, rich_text] }
+
+  - name: pages
+    label: 固定页面
+    icon: description
+    editor:
+      preview: false
+    files:
+      - name: about
+        label: 关于页面
+        file: content/spec/about.md
+        format: raw
+        fields:
+          - { label: 页面正文, name: body, widget: richtext, modes: [raw, rich_text] }
+
+  - name: settings
+    label: 基础设置
+    icon: settings
+    editor:
+      preview: false
+    files:
+      - name: site
+        label: 站点信息
+        file: config/site.yaml
+        format: yaml
+        fields:
+          - { label: 站点地址, name: site, widget: string }
+          - { label: 基础路径, name: base, widget: string, default: / }
+          - { label: 站点标题, name: title, widget: string }
+          - { label: 副标题, name: subtitle, widget: string, required: false }
+          - label: 界面语言
+            name: lang
+            widget: select
+            options:
+              - { label: 简体中文, value: zh_CN }
+              - { label: 繁體中文, value: zh_TW }
+              - { label: English, value: en }
+              - { label: 日本語, value: ja }
+      - name: profile
+        label: 个人资料
+        file: config/profile.yaml
+        format: yaml
+        fields:
+          - { label: 头像路径, name: avatar, widget: string, required: false, hint: 内容仓 assets/ 会映射到 Shirone src/assets/，例如 assets/images/avatar.webp }
+          - { label: 昵称, name: name, widget: string }
+          - { label: 简介, name: bio, widget: text, required: false }
+          - label: 社交链接
+            name: links
+            widget: list
+            required: false
+            default: []
+            fields:
+              - { label: 名称, name: name, widget: string }
+              - { label: 图标, name: icon, widget: string, hint: Iconify 图标名 }
+              - { label: 地址, name: url, widget: string }

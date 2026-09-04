@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>使用说明 · Shirone Studio</title>
+    <link rel="stylesheet" href="./studio.css" />
+    <style>
+      .guide { max-width: 780px; margin: 88px auto; padding: 40px; }
+      .guide h1 { font-size: clamp(42px, 7vw, 66px); }
+      .guide h2 { margin-top: 42px; font: 500 28px/1.2 Georgia, serif; }
+      .guide p, .guide li { color: var(--muted); line-height: 1.8; }
+      .guide code { padding: 2px 7px; border-radius: 7px; background: var(--primary-soft); color: var(--primary-strong); }
+      .guide-nav { display: flex; justify-content: space-between; margin-bottom: 54px; }
+    </style>
+  </head>
+  <body>
+    <main class="panel guide">
+      <nav class="guide-nav"><a class="text-link" href="./">← 返回工作台</a><a class="text-link" href="./admin/">打开编辑器 →</a></nav>
+      <p class="eyebrow">QUICK START</p>
+      <h1>第一次使用</h1>
+      <h2>本地编辑</h2>
+      <ol>
+        <li>使用 Chrome、Edge 或其他 Chromium 浏览器打开编辑器。</li>
+        <li>点击“Work with Local Repository”。</li>
+        <li>选择 <code>/Users/huyan/Code/shirone-content</code> 文件夹。</li>
+        <li>编辑并保存后，内容会直接写入本地内容仓。</li>
+      </ol>
+      <h2>云端编辑</h2>
+      <p>内容仓推送到你自己的 GitHub 私有仓库后，把 Studio 的仓库配置替换为实际的 <code>OWNER/REPO</code>。云端 Studio 登录 GitHub 后即可直接保存并触发博客构建。</p>
+      <h2>文章图片</h2>
+      <p>新文章使用 <code>content/posts/文章名/index.md</code>，封面和正文图片与文章放在同一个文件夹，正文使用 <code>./图片名.webp</code> 引用。</p>
+    </main>
+  </body>
+</html>
