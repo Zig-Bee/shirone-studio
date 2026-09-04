@@ -2,7 +2,7 @@
 
 backend:
   name: github
-  repo: local/shirone-content
+  repo: Zig-Bee/shirone-content
   branch: main
   auth_methods: [token]
   commit_messages:

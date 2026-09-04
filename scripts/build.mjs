@@ -18,7 +18,7 @@ if (!/^https?:\/\//.test(siteUrl)) throw new Error("SHIRONE_SITE_URL must be an 
 
 const configPath = resolve(output, "admin/config.yml");
 const config = readFileSync(configPath, "utf8")
-  .replace("repo: local/shirone-content", `repo: ${repository}`)
+  .replace("repo: Zig-Bee/shirone-content", `repo: ${repository}`)
   .replaceAll("http://127.0.0.1:4322", siteUrl.replace(/\/$/, ""));
 writeFileSync(configPath, config);
 

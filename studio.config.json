@@ -2,5 +2,5 @@
   "shironeRoot": "../Shirone",
   "contentRoot": "../shirone-content",
   "previewUrl": "http://127.0.0.1:4322/",
-  "contentRepository": "local/shirone-content"
+  "contentRepository": "Zig-Bee/shirone-content"
 }

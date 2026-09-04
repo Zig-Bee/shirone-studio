@@ -24,7 +24,7 @@ test("CMS configuration contains no committed credentials", () => {
 });
 
 test("local and cloud workflows stay separate", () => {
-  assert.match(config, /repo: local\/shirone-content/);
+  assert.match(config, /repo: Zig-Bee\/shirone-content/);
   assert.match(config, /auth_methods: \[token\]/);
   assert.match(config, /site_url: http:\/\/127\.0\.0\.1:4322/);
 });
