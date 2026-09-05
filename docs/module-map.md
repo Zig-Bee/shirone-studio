@@ -1,6 +1,6 @@
 # CMS ↔ 内容仓 ↔ 页面模块映射
 
-更新：2026-09-05 · v0.2.0 / B01。新增或移动模块时，同批更新本表及两份开发日志。
+更新：2026-09-05 · v0.2.0 / B04。新增或移动模块时，同批更新本表及两份开发日志。
 
 路径基准：`Studio` = `shirone-studio/`；`内容` = `shirone-content/`；`主题` = `Shirone/`。三个目录并列。
 
@@ -28,7 +28,7 @@
 | 动态 `moments` | `content/moments/*.md` | `src/content.config.ts`、`content-utils.ts` → `src/pages/moments.astro` |
 | 关于页 `pages/about` | `content/spec/about.md` | `src/pages/about.astro` |
 | 文章数量、字数、最近更新 | 无手填入口，由已公开内容生成 | `src/utils/site-stats.ts` → `SiteStats.astro` |
-| 图片库 | `assets/images/`；选择器保存 `assets/images/...` | `src/utils/asset-utils.ts` → Astro 图片优化 → 头像、横幅、歌曲封面 |
+| 图片库 | `assets/images/`；选择器可能保存 `assets/images/...` 或 `/assets/images/...` | `src/utils/content-image-reference.ts`、`src/utils/asset-utils.ts` → Astro 图片优化 → 头像、横幅、歌曲封面 |
 | 音频上传 | `public/audio/uploads/`；保存 `/audio/uploads/...` | `musicConfig.ts` → 播放器运行时；全局上传上限 10 MiB |
 | 文章图片／动态图片 | 文章同目录；动态 `public/images/moments/` | 文章渲染 / 动态组件；原图与派生缩略图分开维护 |
 
@@ -47,7 +47,7 @@
 ## 本批次边界
 
 - 友链、番剧、罗盘、相册、项目等演示数据仍有原路径；本批次从导航移除，**尚未新增这些数据的 CMS 集合，也未删除公开路由**。需要启用时，先补对应数据表单并清理演示数据。
-- 音乐目前关闭且歌单为空；先通过 CMS 添加个人歌曲与封面，再开启。没有把默认歌曲的封面冒充为个人头像。
+- 音乐选择“内容仓内置歌曲”时，空的 `tracks` 列表使用 `data/music.ts`；选择“手动管理歌曲”时必须至少添加一首歌曲。
 - 全站资源引用检查、自动防止误删资源、在线发布状态查询和分类词库属于后续批次；当前检查范围已在入口中明确。
 - 云端 CMS 保存操作会写 GitHub；本批次在本地验证，不使用访问令牌登录或远程保存。
 
@@ -71,3 +71,7 @@
 | 文章精确时间 | `publishedAt`、`updatedAt` | ISO 8601，必须含 `+08:00` | `src/content.config.ts`、`src/utils/content-date.ts` |
 | 说说时间 | `moments.published` | ISO 8601，必须含 `+08:00` | `src/content.config.ts`、`MomentCard.svelte` |
 | 保存前检查 | `scripts/validate-content.mjs` | 拒绝无时区的精确时间 | Studio 工作台“运行内容检查” |
+
+## B04 表单契约范围
+
+CMS 只开放已经接通“保存、同步、类型校验、页面消费”的常用参数。`tests/studio.test.mjs` 固定检查音乐来源、播放模式、语言、背景模式和侧栏枚举与 Shirone 类型一致。Shirone 中尚未开放的高级参数（如 `displaySettings`、`texture`、`toc`、`favicon`、侧栏模块专属的 `collapseAfter/startOfWeek`）仍由主题默认值管理，不能把当前表单理解为 Shirone 全部参数的镜像。

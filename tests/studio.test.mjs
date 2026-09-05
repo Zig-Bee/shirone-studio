@@ -51,3 +51,26 @@ test("local and cloud workflows stay separate", () => {
   assert.deepEqual(parse(config).backend.auth_methods, ["token"]);
   assert.match(config, /site_url: http:\/\/127\.0\.0\.1:4322/);
 });
+
+test("settings select values match Shirone configuration unions", () => {
+  const settings = parse(config).collections.find(c => c.name === "settings");
+  const file = name => settings.files.find(item => item.name === name);
+  const field = (name, key) => file(name).fields.find(item => item.name === key);
+  const values = item => item.options.map(option => typeof option === "string" ? option : option.value);
+
+  assert.deepEqual(values(field("music", "provider")), ["local", "custom", "meting", "mixed"]);
+  assert.deepEqual(values(field("music", "defaultMode")), ["sequence", "repeat-one", "shuffle"]);
+  assert.deepEqual(values(field("site", "lang")), ["zh_CN", "zh_TW", "en", "ja"]);
+  assert.deepEqual(values(field("site", "wallpaperMode").fields[0]), ["banner", "none"]);
+
+  const sidebar = field("sidebar", "components");
+  assert.deepEqual(values(sidebar.fields.find(item => item.name === "type")), [
+    "profile", "music", "announcement", "categories", "tags", "stats", "calendar", "toc",
+  ]);
+  assert.deepEqual(values(sidebar.fields.find(item => item.name === "slot")), ["top", "sticky"]);
+  assert.deepEqual(values(sidebar.fields.find(item => item.name === "column")), ["primary", "secondary"]);
+  assert.deepEqual(values(sidebar.fields.find(item => item.name === "pages")), [
+    "home", "archive", "friends", "moments", "anime", "compass", "skills", "projects",
+    "devices", "timeline", "albums", "about", "categories", "tags", "rss", "atom", "post",
+  ]);
+});

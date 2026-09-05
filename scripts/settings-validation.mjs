@@ -5,7 +5,8 @@ import { parse } from 'yaml';
 export function resolveMedia(root, reference, owner) {
   if (!reference || /^(https?:|data:)/i.test(reference)) return null;
   const value = reference.split(/[?#]/, 1)[0];
-  const target = value.startsWith('/') ? resolve(root, 'public', `.${value}`)
+  const target = value.startsWith('/assets/images/') ? resolve(root, `.${value}`)
+    : value.startsWith('/') ? resolve(root, 'public', `.${value}`)
     : value.startsWith('assets/') ? resolve(root, value)
     : resolve(dirname(owner), value);
   const rel = relative(root, target);

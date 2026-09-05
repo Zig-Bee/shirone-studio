@@ -20,6 +20,9 @@ test('CMS upload paths resolve to real content assets and report missing files',
   write('profile',{avatar:'assets/images/avatar.jpg',name:'',bio:'',links:[]});
   assert.deepEqual(validateSettings(root,cms).errors,[]);
   assert.equal(validateSettings(root,cms).media[0].file,'assets/images/avatar.jpg');
+  write('profile',{avatar:'/assets/images/avatar.jpg',name:'',bio:'',links:[]});
+  assert.deepEqual(validateSettings(root,cms).errors,[]);
+  assert.equal(validateSettings(root,cms).media[0].file,'assets/images/avatar.jpg');
   write('profile',{avatar:'assets/images/missing.jpg'});
   assert.match(validateSettings(root,cms).errors.join(),/找不到资源/);
   assert.throws(()=>resolveMedia(root,'../../outside.jpg',resolve(root,'config/site.yaml')),/内容仓外部/);

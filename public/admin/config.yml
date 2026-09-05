@@ -596,17 +596,20 @@ collections:
             name: enable
             widget: boolean
             default: false
+            hint: 开启后仍需选择“内容仓内置歌曲”、添加手动歌曲，或填写外部歌单 ID。
           - label: 歌曲来源
             name: provider
             widget: select
             options:
+              - label: 内容仓内置歌曲
+                value: local
               - label: 手动管理歌曲
                 value: custom
               - label: 外部歌单
                 value: meting
               - label: 手动歌曲加外部歌单
                 value: mixed
-            default: custom
+            default: local
           - label: 歌曲
             name: tracks
             widget: list
@@ -645,6 +648,7 @@ collections:
                 step: 1
                 required: false
             summary: "{{fields.title}} · {{fields.artist}}"
+            hint: “手动管理歌曲”模式至少需要一首具有唯一编号、歌名和音频的歌曲。
           - label: 外部歌单
             name: meting
             widget: object
