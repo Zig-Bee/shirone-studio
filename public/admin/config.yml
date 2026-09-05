@@ -1,35 +1,30 @@
 # yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.205.3/schema/sveltia-cms.json
-
 backend:
   name: github
   repo: Zig-Bee/shirone-content
   branch: main
-  auth_methods: [token]
+  auth_methods:
+    - token
   commit_messages:
-    create: 'content: 创建{{collection}}“{{slug}}”'
-    update: 'content: 更新{{collection}}“{{slug}}”'
-    delete: 'content: 删除{{collection}}“{{slug}}”'
-    uploadMedia: 'content: 上传“{{path}}”'
-    deleteMedia: 'content: 删除“{{path}}”'
-
+    create: "content: 创建{{collection}}“{{slug}}”"
+    update: "content: 更新{{collection}}“{{slug}}”"
+    delete: "content: 删除{{collection}}“{{slug}}”"
+    uploadMedia: "content: 上传“{{path}}”"
+    deleteMedia: "content: 删除“{{path}}”"
 site_url: http://127.0.0.1:4322
 display_url: http://127.0.0.1:4322
 show_preview_links: true
-
 slug:
   encoding: ascii
   clean_accents: true
-  sanitize_replacement: '-'
-
+  sanitize_replacement: "-"
 media_folder: /public/images/uploads
 public_folder: /images/uploads
-
 media_libraries:
   default:
     config:
       max_file_size: 10485760
       slugify_filename: true
-
 collections:
   - name: posts
     label: 文章
@@ -39,70 +34,148 @@ collections:
     create: true
     extension: md
     format: frontmatter
-    path: '{{slug}}/index'
-    media_folder: ''
-    public_folder: ''
-    preview_path: '/posts/{{dirname}}/'
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    preview_path: /posts/{{dirname}}/
     identifier_field: title
-    summary: '{{title}} · {{published}}'
+    summary: "{{title}} · {{published}}"
     sortable_fields:
-      fields: [published, updated, title]
+      fields:
+        - published
+        - updated
+        - title
       default:
         field: published
         direction: descending
     view_filters:
       - label: 草稿
         field: draft
-        pattern: '^true$'
+        pattern: ^true$
       - label: 已发布
         field: draft
-        pattern: '^false$'
+        pattern: ^false$
       - label: 置顶
         field: pinned
-        pattern: '^true$'
+        pattern: ^true$
+      - label: 模板示例
+        field: template
+        pattern: ^true$
     editor:
       preview: false
     fields:
-      - { label: 标题, name: title, widget: string }
-      - { label: 发布日期, name: published, widget: datetime, type: date }
-      - { label: 精确发布时间, name: publishedAt, widget: datetime, required: false, hint: 同一天发布多篇文章时才需要 }
-      - { label: 更新日期, name: updated, widget: datetime, type: date, required: false }
-      - { label: 精确更新时间, name: updatedAt, widget: datetime, required: false }
-      - { label: 摘要, name: description, widget: text, required: false, default: '' }
-      - { label: 封面, name: image, widget: image, required: false, hint: 推荐上传到文章目录并使用相对路径 }
-      - { label: 分类, name: category, widget: string, required: false, default: '' }
+      - label: 标题
+        name: title
+        widget: string
+      - label: 发布日期
+        name: published
+        widget: datetime
+        type: date
+      - label: 精确发布时间
+        name: publishedAt
+        widget: datetime
+        required: false
+        hint: 同一天发布多篇文章时才需要
+      - label: 更新日期
+        name: updated
+        widget: datetime
+        type: date
+        required: false
+      - label: 精确更新时间
+        name: updatedAt
+        widget: datetime
+        required: false
+      - label: 摘要
+        name: description
+        widget: text
+        required: false
+        default: ""
+      - label: 封面
+        name: image
+        widget: image
+        required: false
+        hint: 推荐上传到文章目录并使用相对路径
+      - label: 分类
+        name: category
+        widget: string
+        required: false
+        default: ""
+        hint: 优先复用现有分类名称，避免 Guides 与 指南等同义重复。
       - label: 标签
         name: tags
         widget: list
         required: false
         default: []
-        field: { label: 标签, name: tag, widget: string }
+        field:
+          label: 标签
+          name: tag
+          widget: string
       - label: 文章语言
         name: lang
         widget: select
         required: false
-        default: ''
+        default: ""
         options:
-          - { label: 跟随站点, value: '' }
-          - { label: 简体中文, value: zh_CN }
-          - { label: 繁體中文, value: zh_TW }
-          - { label: English, value: en }
-          - { label: 日本語, value: ja }
-      - { label: 草稿, name: draft, widget: boolean, default: true }
-      - { label: 置顶, name: pinned, widget: boolean, default: false }
-      - { label: 开启评论, name: comment, widget: boolean, default: true }
-      - { label: URL 别名, name: alias, widget: string, required: false, hint: 可选，例如 old-post-name }
-      - { label: 自定义永久链接, name: permalink, widget: string, required: false, hint: 可选，例如 notes/my-post }
-      - { label: 加密文章, name: encrypted, widget: boolean, default: false }
-      - { label: 访问密码, name: password, widget: string, required: false }
-      - { label: 密码提示, name: passwordHint, widget: string, required: false, default: '' }
-      - { label: 在首页隐藏正文, name: hideHomeContent, widget: boolean, default: true }
+          - label: 跟随站点
+            value: ""
+          - label: 简体中文
+            value: zh_CN
+          - label: 繁體中文
+            value: zh_TW
+          - label: English
+            value: en
+          - label: 日本語
+            value: ja
+      - label: 草稿
+        name: draft
+        widget: boolean
+        default: true
+      - label: 置顶
+        name: pinned
+        widget: boolean
+        default: false
+      - label: 开启评论
+        name: comment
+        widget: boolean
+        default: true
+      - label: URL 别名
+        name: alias
+        widget: string
+        required: false
+        hint: 可选，例如 old-post-name
+      - label: 自定义永久链接
+        name: permalink
+        widget: string
+        required: false
+        hint: 可选，例如 notes/my-post
+      - label: 加密文章
+        name: encrypted
+        widget: boolean
+        default: false
+      - label: 访问密码
+        name: password
+        widget: string
+        required: false
+      - label: 密码提示
+        name: passwordHint
+        widget: string
+        required: false
+        default: ""
+      - label: 在首页隐藏正文
+        name: hideHomeContent
+        widget: boolean
+        default: true
       - label: 正文
         name: body
         widget: richtext
-        modes: [raw, rich_text]
+        modes:
+          - raw
+          - rich_text
         hint: Shirone 扩展语法和 MDX 请使用源码模式；保存后在博客预览中确认效果
-
+      - label: 模板示例
+        name: template
+        widget: boolean
+        default: false
   - name: moments
     label: 说说
     label_singular: 说说
@@ -111,36 +184,74 @@ collections:
     create: true
     extension: md
     format: frontmatter
-    path: '{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}{{second}}'
+    path: "{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}{{second}}"
     identifier_field: published
-    summary: '{{published}} · {{location}}'
+    summary: "{{published}} · {{location}}"
     media_folder: /public/images/moments
     public_folder: /images/moments
     preview_path: /moments/
     editor:
       preview: false
     fields:
-      - { label: 发布时间, name: published, widget: datetime }
-      - { label: 草稿, name: draft, widget: boolean, default: true }
-      - { label: 置顶, name: pinned, widget: boolean, default: false }
-      - { label: 地点, name: location, widget: string, required: false, default: '' }
-      - { label: 心情图标, name: mood, widget: string, required: false, default: '', hint: 例如 material-symbols:sentiment-excited-outline-rounded }
+      - label: 发布时间
+        name: published
+        widget: datetime
+      - label: 草稿
+        name: draft
+        widget: boolean
+        default: true
+      - label: 置顶
+        name: pinned
+        widget: boolean
+        default: false
+      - label: 地点
+        name: location
+        widget: string
+        required: false
+        default: ""
+      - label: 心情图标
+        name: mood
+        widget: string
+        required: false
+        default: ""
+        hint: 例如 material-symbols:sentiment-excited-outline-rounded
       - label: 标签
         name: tags
         widget: list
         required: false
         default: []
-        field: { label: 标签, name: tag, widget: string }
+        field:
+          label: 标签
+          name: tag
+          widget: string
       - label: 图片
         name: images
         widget: list
         required: false
         default: []
         fields:
-          - { label: 图片, name: src, widget: image }
-          - { label: 替代文本, name: alt, widget: string, required: false, default: '' }
-      - { label: 正文, name: body, widget: richtext, modes: [raw, rich_text] }
-
+          - label: 图片
+            name: src
+            widget: image
+          - label: 替代文本
+            name: alt
+            widget: string
+            required: false
+            default: ""
+      - label: 正文
+        name: body
+        widget: richtext
+        modes:
+          - raw
+          - rich_text
+      - label: 模板示例
+        name: template
+        widget: boolean
+        default: false
+    view_filters:
+      - label: 模板示例
+        field: template
+        pattern: ^true$
   - name: pages
     label: 固定页面
     icon: description
@@ -152,8 +263,12 @@ collections:
         file: content/spec/about.md
         format: raw
         fields:
-          - { label: 页面正文, name: body, widget: richtext, modes: [raw, rich_text] }
-
+          - label: 页面正文
+            name: body
+            widget: richtext
+            modes:
+              - raw
+              - rich_text
   - name: settings
     label: 基础设置
     icon: settings
@@ -161,36 +276,604 @@ collections:
       preview: false
     files:
       - name: site
-        label: 站点信息
+        label: 站点资料与外观
         file: config/site.yaml
         format: yaml
         fields:
-          - { label: 站点地址, name: site, widget: string }
-          - { label: 基础路径, name: base, widget: string, default: / }
-          - { label: 站点标题, name: title, widget: string }
-          - { label: 副标题, name: subtitle, widget: string, required: false }
+          - label: 站点地址
+            name: site
+            widget: string
+            pattern:
+              - ^https?://[^\s]+$
+              - 请填写完整的 http:// 或 https:// 地址
+          - label: 基础路径
+            name: base
+            widget: string
+            default: /
+          - label: 站点标题
+            name: title
+            widget: string
+          - label: 副标题
+            name: subtitle
+            widget: string
+            required: false
           - label: 界面语言
             name: lang
             widget: select
             options:
-              - { label: 简体中文, value: zh_CN }
-              - { label: 繁體中文, value: zh_TW }
-              - { label: English, value: en }
-              - { label: 日本語, value: ja }
+              - label: 简体中文
+                value: zh_CN
+              - label: 繁體中文
+                value: zh_TW
+              - label: English
+                value: en
+              - label: 日本語
+                value: ja
+          - label: 建站日期
+            name: established
+            widget: datetime
+            type: date
+            format: YYYY-MM-DD
+            required: false
+            hint: 留空隐藏运行天数；按站点时区计算已过天数，建站当天为 0 天。
+          - label: 站点时区
+            name: timeZone
+            widget: string
+            default: Asia/Shanghai
+          - label: 本地预览包含草稿
+            name: showDraftsInDev
+            widget: boolean
+            default: false
+          - label: 背景模式
+            name: wallpaperMode
+            widget: object
+            fields:
+              - label: 默认模式
+                name: defaultMode
+                widget: select
+                options:
+                  - label: 图片横幅
+                    value: banner
+                  - label: 纯色
+                    value: none
+          - label: 横幅
+            name: banner
+            widget: object
+            fields:
+              - label: 背景图片
+                name: src
+                widget: object
+                fields:
+                  - label: 桌面图片
+                    name: desktop
+                    widget: list
+                    required: false
+                    default: []
+                    field:
+                      label: 图片
+                      name: image
+                      widget: image
+                      required: false
+                      media_folder: /assets/images
+                      public_folder: assets/images
+                    hint: 建议横向图片；顺序即轮播顺序。
+                  - label: 手机图片
+                    name: mobile
+                    widget: list
+                    required: false
+                    default: []
+                    field:
+                      label: 图片
+                      name: image
+                      widget: image
+                      required: false
+                      media_folder: /assets/images
+                      public_folder: assets/images
+                    hint: 建议主体居中的竖向图片。
+              - label: 裁切位置
+                name: position
+                widget: select
+                options:
+                  - top
+                  - center
+                  - bottom
+                default: center
+              - label: 文字遮罩
+                name: dim
+                widget: object
+                fields:
+                  - label: 启用遮罩
+                    name: enable
+                    widget: boolean
+                    default: true
+                  - label: 遮罩浓度
+                    name: opacity
+                    widget: number
+                    value_type: float
+                    min: 0
+                    max: 1
+                    step: 0.01
+                    default: 0.24
+              - label: 横幅文字
+                name: homeText
+                widget: object
+                fields:
+                  - label: 显示文字
+                    name: enable
+                    widget: boolean
+                    default: true
+                  - label: 横幅标题
+                    name: title
+                    widget: string
+                    required: false
+                    default: ""
+                    hint: 留空跟随站点标题。
+                  - label: 横幅短句
+                    name: subtitle
+                    widget: list
+                    required: false
+                    default: []
+                    field:
+                      label: 短句
+                      name: text
+                      widget: text
+                    hint: 清空列表跟随站点副标题。
+                  - label: 打字效果
+                    name: typewriter
+                    widget: object
+                    fields:
+                      - label: 启用
+                        name: enable
+                        widget: boolean
+                        default: false
+                      - label: 打字间隔（毫秒）
+                        name: speed
+                        widget: number
+                        value_type: int
+                        min: 20
+                        max: 1000
+                        step: 1
+                        default: 100
+                      - label: 删除间隔（毫秒）
+                        name: deleteSpeed
+                        widget: number
+                        value_type: int
+                        min: 20
+                        max: 1000
+                        step: 1
+                        default: 50
+                      - label: 停留时间（毫秒）
+                        name: pauseTime
+                        widget: number
+                        value_type: int
+                        min: 0
+                        max: 30000
+                        step: 1
+                        default: 2000
+                      - label: 循环
+                        name: loop
+                        widget: boolean
+                        default: true
+              - label: 轮播
+                name: carousel
+                widget: object
+                fields:
+                  - label: 启用轮播
+                    name: enable
+                    widget: boolean
+                    default: true
+                  - label: 切换间隔（毫秒）
+                    name: interval
+                    widget: number
+                    value_type: int
+                    min: 3000
+                    max: 60000
+                    step: 1
+                    default: 6000
+                  - label: 过渡时长（毫秒）
+                    name: fadeDuration
+                    widget: number
+                    value_type: int
+                    min: 0
+                    max: 5000
+                    step: 1
+                    default: 1200
+                  - label: 运镜效果
+                    name: animation
+                    widget: select
+                    options:
+                      - none
+                      - ken-burns
+                      - zoom-in
+                      - zoom-out
+                      - pan-left
+                      - pan-right
+                    default: none
+              - label: 底部波浪
+                name: waves
+                widget: object
+                fields:
+                  - label: 显示波浪
+                    name: enable
+                    widget: boolean
+                    default: true
+          - label: 主题颜色
+            name: themeColor
+            widget: object
+            fields:
+              - label: 色相
+                name: hue
+                widget: number
+                value_type: int
+                min: 0
+                max: 360
+                step: 1
+                default: 315
+              - label: 固定颜色
+                name: fixed
+                widget: boolean
+                default: false
+              - label: 配色
+                name: style
+                widget: select
+                options:
+                  - tonalSpot
+                  - vibrant
+                  - content
+                  - expressive
+                  - rainbow
+                  - fruitSalad
+                  - monochrome
+                  - neutral
+                  - fidelity
+                default: tonalSpot
+              - label: 色彩规范
+                name: spec
+                widget: select
+                options:
+                  - "2021"
+                  - "2025"
+                default: "2025"
       - name: profile
         label: 个人资料
         file: config/profile.yaml
         format: yaml
         fields:
-          - { label: 头像路径, name: avatar, widget: string, required: false, hint: 内容仓 assets/ 会映射到 Shirone src/assets/，例如 assets/images/avatar.webp }
-          - { label: 昵称, name: name, widget: string }
-          - { label: 简介, name: bio, widget: text, required: false }
+          - label: 头像
+            name: avatar
+            widget: image
+            required: false
+            media_folder: /assets/images
+            public_folder: assets/images
+          - label: 昵称
+            name: name
+            widget: string
+            required: false
+            default: ""
+            hint: 留空跟随站点标题。
+          - label: 简介
+            name: bio
+            widget: text
+            required: false
+            default: ""
+            hint: 留空跟随站点副标题。
           - label: 社交链接
             name: links
             widget: list
             required: false
             default: []
             fields:
-              - { label: 名称, name: name, widget: string }
-              - { label: 图标, name: icon, widget: string, hint: Iconify 图标名 }
-              - { label: 地址, name: url, widget: string }
+              - label: 名称
+                name: name
+                widget: string
+              - label: 图标
+                name: icon
+                widget: string
+                hint: Iconify 图标名
+              - label: 地址
+                name: url
+                widget: string
+                pattern:
+                  - ^https?://[^\s]+$
+                  - 请填写完整的 http:// 或 https:// 地址
+            hint: 仅添加你实际使用的账号；删除列表项即隐藏入口。
+      - name: music
+        label: 音乐播放器
+        file: config/music.yaml
+        format: yaml
+        fields:
+          - label: 启用播放器
+            name: enable
+            widget: boolean
+            default: false
+          - label: 歌曲来源
+            name: provider
+            widget: select
+            options:
+              - label: 手动管理歌曲
+                value: custom
+              - label: 外部歌单
+                value: meting
+              - label: 手动歌曲加外部歌单
+                value: mixed
+            default: custom
+          - label: 歌曲
+            name: tracks
+            widget: list
+            required: false
+            default: []
+            fields:
+              - label: 唯一编号
+                name: id
+                widget: string
+                hint: 例如 song-1；同一歌单不能重复。
+              - label: 歌名
+                name: title
+                widget: string
+              - label: 歌手
+                name: artist
+                widget: string
+                required: false
+              - label: 音频
+                name: source
+                widget: file
+                media_folder: /public/audio/uploads
+                public_folder: /audio/uploads
+                hint: 上传音频或填写 HTTPS 音频地址。
+              - label: 歌曲封面
+                name: cover
+                widget: image
+                required: false
+                media_folder: /assets/images
+                public_folder: assets/images
+              - label: 时长（秒，可选）
+                name: duration
+                widget: number
+                value_type: int
+                min: 1
+                max: 86400
+                step: 1
+                required: false
+            summary: "{{fields.title}} · {{fields.artist}}"
+          - label: 外部歌单
+            name: meting
+            widget: object
+            fields:
+              - label: 平台
+                name: server
+                widget: select
+                options:
+                  - netease
+                  - tencent
+                  - kugou
+                default: netease
+              - label: 类型
+                name: type
+                widget: select
+                options:
+                  - playlist
+                  - song
+                  - album
+                  - artist
+                default: playlist
+              - label: 歌单或歌曲 ID
+                name: id
+                widget: string
+                required: false
+                default: ""
+          - label: 默认音量
+            name: defaultVolume
+            widget: number
+            value_type: float
+            min: 0
+            max: 1
+            step: 0.05
+            default: 0.7
+          - label: 播放顺序
+            name: defaultMode
+            widget: select
+            options:
+              - sequence
+              - repeat-one
+              - shuffle
+            default: sequence
+      - name: announcement
+        label: 公告
+        file: config/announcement.yaml
+        format: yaml
+        fields:
+          - label: 标题
+            name: title
+            widget: string
+            required: false
+            default: ""
+          - label: 内容
+            name: content
+            widget: text
+            required: false
+            default: ""
+          - label: 允许关闭
+            name: closable
+            widget: boolean
+            default: true
+          - label: 公告链接
+            name: link
+            widget: object
+            fields:
+              - label: 显示链接
+                name: enable
+                widget: boolean
+                default: false
+              - label: 链接文字
+                name: text
+                widget: string
+                required: false
+                default: ""
+              - label: 链接地址
+                name: url
+                widget: string
+                required: false
+                default: ""
+                pattern:
+                  - ^(https?://[^\s]+|/[^\s]*|)$
+                  - 请输入网址或站内路径
+              - label: 外部链接
+                name: external
+                widget: boolean
+                default: true
+      - name: sidebar
+        label: 首页与侧栏布局
+        file: config/sidebar.yaml
+        format: yaml
+        fields:
+          - label: 显示侧栏
+            name: enable
+            widget: boolean
+            default: true
+          - label: 栏数
+            name: arrangement
+            widget: select
+            options:
+              - label: 单侧栏
+                value: single
+              - label: 双侧栏
+                value: dual
+            default: dual
+          - label: 主侧栏位置
+            name: side
+            widget: select
+            options:
+              - left
+              - right
+            default: left
+          - label: 模块顺序
+            name: components
+            widget: list
+            required: false
+            default: []
+            fields:
+              - label: 模块
+                name: type
+                widget: select
+                options:
+                  - profile
+                  - music
+                  - announcement
+                  - categories
+                  - tags
+                  - stats
+                  - calendar
+                  - toc
+              - label: 显示
+                name: enable
+                widget: boolean
+                default: true
+              - label: 停靠方式
+                name: slot
+                widget: select
+                options:
+                  - top
+                  - sticky
+                default: top
+              - label: 所在列
+                name: column
+                widget: select
+                options:
+                  - primary
+                  - secondary
+                default: primary
+              - label: 显示页面
+                name: pages
+                widget: select
+                options:
+                  - home
+                  - archive
+                  - friends
+                  - moments
+                  - anime
+                  - compass
+                  - skills
+                  - projects
+                  - devices
+                  - timeline
+                  - albums
+                  - about
+                  - categories
+                  - tags
+                  - rss
+                  - atom
+                  - post
+                multiple: true
+                required: false
+                default: []
+                hint: 留空表示所有页面。
+            summary: "{{fields.type}} · {{fields.enable}}"
+            hint: 拖动调整顺序；关闭模块保留其配置。音乐还需在音乐设置中启用。
+      - name: nav-bar
+        label: 顶部导航
+        file: config/nav-bar.yaml
+        format: yaml
+        fields:
+          - label: 导航项目
+            name: links
+            widget: list
+            required: false
+            default: []
+            fields:
+              - &a1
+                label: 内置栏目
+                name: preset
+                widget: select
+                options:
+                  - Home
+                  - Archive
+                  - Friends
+                  - Moments
+                  - Anime
+                  - Compass
+                  - Skills
+                  - Projects
+                  - Devices
+                  - Timeline
+                  - Albums
+                  - Categories
+                  - Tags
+                  - About
+                  - GitHub
+                required: false
+              - &a2
+                label: 自定义名称
+                name: name
+                widget: string
+                required: false
+                hint: 内置栏目可留空；自定义链接必须填写。
+              - &a3
+                label: 地址
+                name: url
+                widget: string
+                required: false
+                pattern:
+                  - ^(https?://[^\s]+|/[^\s]*|)$
+                  - 请输入完整网址或 / 开头的站内路径
+              - &a4
+                label: 图标
+                name: icon
+                widget: string
+                required: false
+              - &a5
+                label: 外部链接
+                name: external
+                widget: boolean
+                default: false
+              - label: 子菜单
+                name: children
+                widget: list
+                required: false
+                default: []
+                fields:
+                  - *a1
+                  - *a2
+                  - *a3
+                  - *a4
+                  - *a5
+            hint: 顺序即展示顺序。移除入口不会删除页面内容；有内容后再添加栏目。

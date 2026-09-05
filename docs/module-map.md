@@ -1,0 +1,64 @@
+# CMS ↔ 内容仓 ↔ 页面模块映射
+
+更新：2026-09-05 · v0.2.0 / B01。新增或移动模块时，同批更新本表及两份开发日志。
+
+路径基准：`Studio` = `shirone-studio/`；`内容` = `shirone-content/`；`主题` = `Shirone/`。三个目录并列。
+
+统一数据流：CMS 表单 → 内容仓文件 → `主题/scripts/content/sync.mjs` → 自动生成 `主题/src/user/user-config.ts` 或物化内容 → 配置消费者 → 页面。**不要编辑生成物来保存设置。**
+
+所有 CMS 字段定义在 `Studio/public/admin/config.yml`；下表用集合／条目与字段定位，避免行号随新增表单漂移。
+
+| 可修改模块 / CMS 定位 | 内容仓保存位置与字段 | 前端配置 / 显示位置 |
+| --- | --- | --- |
+| 站点资料 `settings/site` | `config/site.yaml`：`title/subtitle/lang/site/base/timeZone` | `src/config/siteConfig.ts` → `src/components/organisms/TopAppBar.astro`、`src/layouts/Layout.astro` |
+| 建站日期 `settings/site` | `config/site.yaml`：`established` | `src/types/config.ts` → `src/utils/site-age.ts`、`site-stats.ts` → `src/components/molecules/SiteStats.astro` |
+| 草稿预览 `settings/site` | `config/site.yaml`：`showDraftsInDev` | `src/utils/content-utils.ts` → 首页、归档、分类、标签、动态；统计另行只计公开条目 |
+| 桌面与手机背景 `settings/site` → 横幅 | `config/site.yaml`：`banner.src.desktop/mobile/position` | `src/config/siteConfig.ts` → `src/components/organisms/BannerStage.astro` |
+| 横幅文字、遮罩、轮播、波浪 `settings/site` | `config/site.yaml`：`banner.homeText/dim/carousel/waves` | `BannerStage.astro`、`src/components/molecules/BannerWaves.astro`；空文案在 `siteConfig.ts` 回退 |
+| 背景模式与颜色 `settings/site` | `config/site.yaml`：`wallpaperMode/themeColor` | `src/config/siteConfig.ts`、`src/utils/theme-utils.ts`、`src/layouts/Layout.astro`；访客本地显示偏好可覆盖默认值 |
+| 头像、昵称、简介 `settings/profile` | `config/profile.yaml`：`avatar/name/bio` | `src/config/profileConfig.ts` → `src/components/organisms/Profile.astro`；空名称／简介跟随站点 |
+| 社交入口 `settings/profile` | `config/profile.yaml`：`links[]` | `profileConfig.ts` → `Profile.astro`；列表删除即隐藏 |
+| 音乐开关、歌单、歌曲封面 `settings/music` | `config/music.yaml`：`enable/provider/tracks/meting/defaultVolume/defaultMode` | `src/config/musicConfig.ts` → `src/components/organisms/SideBar.astro` → `src/components/organisms/music/MusicSidebar.astro`；播放器运行时：`src/utils/music/music-runtime.ts` |
+| 公告 `settings/announcement` | `config/announcement.yaml`：`title/content/closable/link` | `src/config/announcementConfig.ts` → `src/components/molecules/Announcement.astro`；显示开关在侧栏模块中 |
+| 侧栏顺序、开关、显示页面 `settings/sidebar` | `config/sidebar.yaml`：`enable/arrangement/side/components[]` | `src/config/sidebarConfig.ts`、`src/types/sidebarConfig.ts` → `src/components/organisms/SideBar.astro` |
+| 顶部导航与子菜单 `settings/nav-bar` | `config/nav-bar.yaml`：`links[]` | `src/config/navBarConfig.ts` → `TopAppBar.astro` 及移动导航；删除入口不等于关闭路由 |
+| 文章正文、封面、草稿、置顶 `posts` | `content/posts/**/*.{md,mdx}`：frontmatter 与正文 | `src/content.config.ts` → `src/utils/content-utils.ts` → `src/components/organisms/PostPage.astro`、`PostCard.astro`、文章路由 |
+| 模板示例筛选 `posts/moments` | frontmatter：`template`（后台分类标记） | 前端只由 `draft` 决定公开性；“模板示例”本身不会自动下架内容 |
+| 分类与标签 `posts` | 文章 frontmatter：`category/tags` | `content-utils.ts` → `src/components/molecules/Categories.astro`、`Tags.astro`、分类条与归档；空卡片不显示 |
+| 动态 `moments` | `content/moments/*.md` | `src/content.config.ts`、`content-utils.ts` → `src/pages/moments.astro` |
+| 关于页 `pages/about` | `content/spec/about.md` | `src/pages/about.astro` |
+| 文章数量、字数、最近更新 | 无手填入口，由已公开内容生成 | `src/utils/site-stats.ts` → `SiteStats.astro` |
+| 图片库 | `assets/images/`；选择器保存 `assets/images/...` | `src/utils/asset-utils.ts` → Astro 图片优化 → 头像、横幅、歌曲封面 |
+| 音频上传 | `public/audio/uploads/`；保存 `/audio/uploads/...` | `musicConfig.ts` → 播放器运行时；全局上传上限 10 MiB |
+| 文章图片／动态图片 | 文章同目录；动态 `public/images/moments/` | 文章渲染 / 动态组件；原图与派生缩略图分开维护 |
+
+## 校验、预览与部署
+
+| 关系 | 代码位置 / 使用方式 |
+| --- | --- |
+| CMS 可编辑字段与资源校验 | `Studio/scripts/settings-validation.mjs`、`validate-content.mjs`；`npm run check:content` |
+| 配置资源引用清单 | 本地工作台“检查设置中的图片与音频”；`Studio/scripts/dev.mjs` 的 `/api/settings-media`，返回文件及使用字段。只覆盖已开放设置，不声称是全站安全删除检查 |
+| 内容配置最终类型校验 | `主题/scripts/content/config-domains.mjs`、`config-overlay.mjs`、`src/types/*`；`pnpm content:validate` |
+| 本地工作台与脏文件提示 | `Studio/public/index.html`、`studio.js`；`scripts/dev.mjs` 的 `/api/status` |
+| 本地内容同步保护 | `主题/scripts/content/dev-sync-plugin.mjs`：内容仓不干净时拒绝拉取；不会自动覆盖本地修改 |
+| CMS 构建与发布 | `Studio/scripts/build.mjs` → `dist/`；`.github/workflows/pages.yml` 发布 Studio。CMS 发布与博客发布是两件事 |
+| 版本记录 | `Studio/docs/developer-log-cms.md`、`developer-log-frontend.md`；同一批次号关联，凭据不进入文档仓 |
+
+## 本批次边界
+
+- 友链、番剧、罗盘、相册、项目等演示数据仍有原路径；本批次从导航移除，**尚未新增这些数据的 CMS 集合，也未删除公开路由**。需要启用时，先补对应数据表单并清理演示数据。
+- 音乐目前关闭且歌单为空；先通过 CMS 添加个人歌曲与封面，再开启。没有把默认歌曲的封面冒充为个人头像。
+- 全站资源引用检查、自动防止误删资源、在线发布状态查询和分类词库属于后续批次；当前检查范围已在入口中明确。
+- 云端 CMS 保存操作会写 GitHub；本批次在本地验证，不使用访问令牌登录或远程保存。
+
+## B02 保存、预览与远程更新
+
+| 操作／状态 | 代码位置 | 数据方向与边界 |
+| --- | --- | --- |
+| 本地 CMS 保存 | `public/admin/config.yml` | 选择本地 shirone-content，直接保存正文、资源和 config/*.yaml |
+| 保存后自动更新预览 | `scripts/preview-sync.mjs`；`scripts/dev.mjs` 启停监听 | 内容仓 → Shirone 副本；复用主题 sync、图标及缩略图脚本；无 Git 写操作 |
+| 同步进度与失败提示 | `/api/status` → `public/studio.js` → `public/index.html#syncStatus` | 每 5 秒读取，成功仅表示本地副本已更新 |
+| 拉取远程更新 | Shirone `scripts/content/dev-sync-plugin.mjs`、`src/components/organisms/TopAppBar.astro`、`src/i18n/languages/*.ts` | GitHub → 本地；有未提交修改则保留本地并停止拉取 |
+| 发布 | 现有 Git 提交／推送与 GitHub Actions | 本批没有增加一键发布或自动双向合并；发布成功须核对部署与线上页面 |
+
+本地与远程 CMS 本次选一个编辑位置。内容仓是唯一编辑来源；不要直接改主题内生成副本来维护内容。Studio 服务运行时自动更新预览，服务停止后需重启或运行主题 `pnpm content:sync`。

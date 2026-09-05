@@ -7,6 +7,7 @@ const output = resolve(projectRoot, "dist");
 rmSync(output, { recursive: true, force: true });
 mkdirSync(output, { recursive: true });
 cpSync(source, output, { recursive: true });
+cpSync(resolve(projectRoot, "docs"), resolve(output, "docs"), { recursive: true });
 
 const repository = process.env.SVELTIA_CONTENT_REPO || loadStudioConfig().contentRepository;
 if (!/^[\w.-]+\/[\w.-]+$/.test(repository)) {

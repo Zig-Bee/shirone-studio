@@ -6,6 +6,7 @@
 ## 本地使用
 
 ```bash
+npm install
 npm run dev
 ```
 
@@ -22,8 +23,11 @@ npm run dev
 - `content/posts/`：文章与文章同目录图片
 - `content/moments/`：说说与说说图片
 - `content/spec/about.md`：关于页面
-- `config/site.yaml`：站点基础信息
+- `config/site.yaml`：站点资料、横幅、建站日期与草稿预览
 - `config/profile.yaml`：个人资料和社交链接
+- `config/music.yaml`、`announcement.yaml`、`sidebar.yaml`、`nav-bar.yaml`：音乐、公告、侧栏与导航
+
+开发记录：[CMS](docs/developer-log-cms.md) · [前端](docs/developer-log-frontend.md) · [模块映射](docs/module-map.md)
 
 Shirone 的扩展 Markdown 与 MDX 应使用编辑器的源码模式，并在真实博客预览中确认。
 Studio 不直接重写 `data/*.ts` 或主题实现文件。

@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, extname, resolve } from "node:path";
 import { loadStudioConfig, projectRoot } from "./config.mjs";
+import { parse } from "yaml";
+import { validateSettings } from "./settings-validation.mjs";
 
 const contentRoot = resolve(projectRoot, loadStudioConfig().contentRoot);
 const errors = [];
@@ -73,6 +75,9 @@ for (const kind of ["posts", "moments"]) {
 }
 
 const config = readFileSync(resolve(projectRoot, "public/admin/config.yml"), "utf8");
+const settings = validateSettings(contentRoot, parse(config));
+errors.push(...settings.errors);
+counts.media += settings.media.length;
 if (!/^media_folder:\s*\/public\/images\/uploads$/m.test(config)) {
   errors.push("CMS 配置缺少全局 media_folder");
 }

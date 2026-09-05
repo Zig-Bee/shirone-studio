@@ -30,7 +30,7 @@
             <p class="eyebrow">PERSONAL CONTENT WORKSPACE</p>
             <h1 id="pageTitle">把写作留在这里，<br />把主题留给 Shirone。</h1>
             <p class="lede">
-              文章、说说和图片在独立内容仓中管理。Studio 只负责编辑，Shirone 只负责预览与发布。
+              文章、图片、站点资料和页面设置统一管理。保存内容后，先检查真实页面，再确认发布结果。
             </p>
           </div>
           <div class="primary-actions">
@@ -80,11 +80,31 @@
             <ol class="workflow">
               <li><span>01</span><div><strong>编辑</strong><small>写文章、说说，上传封面和正文图片</small></div></li>
               <li><span>02</span><div><strong>预览</strong><small>在真实 Shirone 页面确认排版和扩展语法</small></div></li>
-              <li><span>03</span><div><strong>发布</strong><small>云端模式保存到 GitHub 后自动触发构建</small></div></li>
+              <li><span>03</span><div><strong>确认更新</strong><small>保存成功不代表网站已更新；发布流程成功后再刷新博客确认</small></div></li>
             </ol>
           </article>
         </section>
 
+        <section class="panel" aria-label="日常管理">
+          <h2>日常管理</h2>
+          <div class="panel-actions">
+            <a class="button button-compact" href="./admin/#/collections/settings/entries/site">站点与外观</a>
+            <a class="button button-compact" href="./admin/#/collections/settings/entries/profile">头像与社交</a>
+            <a class="button button-compact" href="./admin/#/collections/settings/entries/music">音乐</a>
+            <a class="button button-compact" href="./admin/#/collections/settings/entries/sidebar">侧栏布局</a>
+            <a class="button button-compact" href="./admin/#/collections/settings/entries/nav-bar">顶部导航</a>
+            <a class="button button-compact" href="./admin/#/collections/posts">文章与草稿</a>
+            <button class="button button-compact" id="mediaCheckButton" type="button">检查设置中的图片与音频</button>
+          </div>
+          <p>本地 CMS 请选 shirone-content 内容仓：保存后自动更新本地预览。远程 CMS 保存到 GitHub；切换编辑位置前，先发布本地修改或拉取远程更新。</p>
+          <p id="syncStatus" aria-live="polite">本地预览同步状态待检查。</p>
+          <p>发布流程：检查内容 → 提交并推送 → 等待部署 → 核对线上页面。保存和本地预览不会自动发布。</p>
+          <div class="panel-actions">
+            <a href="./docs/module-map.md">模块与代码映射</a>
+            <a href="./docs/developer-log-cms.md">CMS 开发日志</a>
+            <a href="./docs/developer-log-frontend.md">前端开发日志</a>
+          </div>
+        </section>
         <section class="notice" id="notice" hidden aria-live="polite"></section>
       </main>
     </div>
