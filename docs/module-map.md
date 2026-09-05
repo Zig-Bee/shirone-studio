@@ -1,6 +1,6 @@
 # CMS ↔ 内容仓 ↔ 页面模块映射
 
-更新：2026-09-05 · v0.2.0 / B04。新增或移动模块时，同批更新本表及两份开发日志。
+更新：2026-09-05 · 团子 0.0.1 / B05。新增或移动模块时，同批更新本表及两份开发日志。
 
 路径基准：`Studio` = `shirone-studio/`；`内容` = `shirone-content/`；`主题` = `Shirone/`。三个目录并列。
 
@@ -75,3 +75,11 @@
 ## B04 表单契约范围
 
 CMS 只开放已经接通“保存、同步、类型校验、页面消费”的常用参数。`tests/studio.test.mjs` 固定检查音乐来源、播放模式、语言、背景模式和侧栏枚举与 Shirone 类型一致。Shirone 中尚未开放的高级参数（如 `displaySettings`、`texture`、`toc`、`favicon`、侧栏模块专属的 `collapseAfter/startOfWeek`）仍由主题默认值管理，不能把当前表单理解为 Shirone 全部参数的镜像。
+
+## B05 版本与建站手记
+
+| 模块 | 位置 | 用途 |
+| --- | --- | --- |
+| 整体版本 | 三个项目的 `VERSION` 与 `v0.0.1` 标签 | 对齐开发快照，独立于上游软件包版本 |
+| 发布记录 | `Studio/docs/releases/0.0.1.md` | 恢复步骤、验证范围与同步状态 |
+| 首篇建站总结 | `内容/content/posts/tuanzi-first-release/index.md` | CMS 的文章集合编辑，前端 `/posts/tuanzi-first-release/` 显示 |
