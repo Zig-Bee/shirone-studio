@@ -83,3 +83,10 @@ CMS 只开放已经接通“保存、同步、类型校验、页面消费”的�
 | 整体版本 | 三个项目的 `VERSION` 与 `v0.0.1` 标签 | 对齐开发快照，独立于上游软件包版本 |
 | 发布记录 | `Studio/docs/releases/0.0.1.md` | 恢复步骤、验证范围与同步状态 |
 | 首篇建站总结 | `内容/content/posts/tuanzi-first-release/index.md` | CMS 的文章集合编辑，前端 `/posts/tuanzi-first-release/` 显示 |
+
+## B06 正文热更新与可选日期
+
+| 关系 | 实现位置 | 约定 |
+| --- | --- | --- |
+| CMS 可选日期空值 → 前端 schema | `主题/src/utils/optional-content-date.ts` → `主题/src/content.config.ts` | 空字符串、空白、null 视为未填写；非空非法值仍拒绝 |
+| 同步完成 → 浏览器更新 | `主题/src/components/organisms/TopAppBar.astro` | 独立脚本作用域与一次绑定；updated/up_to_date 均刷新，失败不刷新 |
