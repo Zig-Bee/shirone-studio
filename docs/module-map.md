@@ -62,3 +62,12 @@
 | 发布 | 现有 Git 提交／推送与 GitHub Actions | 本批没有增加一键发布或自动双向合并；发布成功须核对部署与线上页面 |
 
 本地与远程 CMS 本次选一个编辑位置。内容仓是唯一编辑来源；不要直接改主题内生成副本来维护内容。Studio 服务运行时自动更新预览，服务停止后需重启或运行主题 `pnpm content:sync`。
+
+## B03 时区约定
+
+| 模块 | CMS 字段 | 内容格式 | 前端校验／消费 |
+| --- | --- | --- | --- |
+| 文章日期 | `published`、`updated` | `YYYY-MM-DD`，中国日历日期 | `src/utils/content-date.ts` |
+| 文章精确时间 | `publishedAt`、`updatedAt` | ISO 8601，必须含 `+08:00` | `src/content.config.ts`、`src/utils/content-date.ts` |
+| 说说时间 | `moments.published` | ISO 8601，必须含 `+08:00` | `src/content.config.ts`、`MomentCard.svelte` |
+| 保存前检查 | `scripts/validate-content.mjs` | 拒绝无时区的精确时间 | Studio 工作台“运行内容检查” |

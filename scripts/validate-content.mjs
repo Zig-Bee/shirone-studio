@@ -51,6 +51,15 @@ function validateEntry(file, kind) {
   requireKey(block, "published", file);
   if (kind === "posts") requireKey(block, "title", file);
 
+  const zonedFields = kind === "posts" ? ["publishedAt", "updatedAt"] : ["published"];
+  for (const key of zonedFields) {
+    const match = block.match(new RegExp(`^${key}:\\s*([^#\\r\\n]+)`, "m"));
+    const value = match?.[1].trim().replace(/^['"]|['"]$/g, "");
+    if (value?.includes("T") && !/(?:Z|[+-]\d{2}:?\d{2})$/i.test(value)) {
+      errors.push(`${file}: ${key} 必须包含时区；中国标准时间请使用 +08:00`);
+    }
+  }
+
   // 示例文章会在代码块中展示不存在的占位图片；它们不是页面实际引用。
   const renderedSource = source
     .replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1\s*$/gm, "")

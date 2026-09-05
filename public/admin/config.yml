@@ -75,7 +75,9 @@ collections:
         name: publishedAt
         widget: datetime
         required: false
-        hint: 同一天发布多篇文章时才需要
+        input_timezone: Asia/Shanghai
+        output_utc: false
+        hint: 中国标准时间（Asia/Shanghai）；同一天发布多篇文章时才需要
       - label: 更新日期
         name: updated
         widget: datetime
@@ -85,6 +87,9 @@ collections:
         name: updatedAt
         widget: datetime
         required: false
+        input_timezone: Asia/Shanghai
+        output_utc: false
+        hint: 中国标准时间（Asia/Shanghai）
       - label: 摘要
         name: description
         widget: text
@@ -130,6 +135,7 @@ collections:
         name: draft
         widget: boolean
         default: true
+        hint: 开启时只保存到内容仓，不会显示在网站；关闭后公开显示
       - label: 置顶
         name: pinned
         widget: boolean
@@ -196,10 +202,14 @@ collections:
       - label: 发布时间
         name: published
         widget: datetime
+        input_timezone: Asia/Shanghai
+        output_utc: false
+        hint: 中国标准时间（Asia/Shanghai）
       - label: 草稿
         name: draft
         widget: boolean
         default: true
+        hint: 开启时只保存到内容仓，不会显示在网站；关闭后公开显示
       - label: 置顶
         name: pinned
         widget: boolean

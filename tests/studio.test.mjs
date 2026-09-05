@@ -20,6 +20,19 @@ test("Shirone collections use content repository paths", () => {
   assert.equal(parse(config).collections.find(c => c.name === "posts").path, "{{slug}}/index");
 });
 
+test("CMS stores exact publication times in China Standard Time", () => {
+  const parsed = parse(config);
+  const posts = parsed.collections.find(c => c.name === "posts");
+  const moments = parsed.collections.find(c => c.name === "moments");
+  for (const field of posts.fields.filter(field => ["publishedAt", "updatedAt"].includes(field.name))) {
+    assert.equal(field.input_timezone, "Asia/Shanghai");
+    assert.equal(field.output_utc, false);
+  }
+  const momentPublished = moments.fields.find(field => field.name === "published");
+  assert.equal(momentPublished.input_timezone, "Asia/Shanghai");
+  assert.equal(momentPublished.output_utc, false);
+});
+
 test("media storage has a global fallback and collection-specific paths", () => {
   assert.match(config, /^media_folder: \/public\/images\/uploads$/m);
   assert.match(config, /^public_folder: \/images\/uploads$/m);
