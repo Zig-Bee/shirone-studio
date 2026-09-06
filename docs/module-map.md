@@ -104,8 +104,8 @@ CMS 只开放已经接通“保存、同步、类型校验、页面消费”的�
 
 - CMS 独立 `skills` 集合 → `content/skills/<id>/index.md` → 前端 skills 内容集合 → SkillResourceIndex/SkillResourceCard → `/skills/<id>/`。UUID 保持稳定，修改名称不改变路径。
 - CMS 设置中的 Skill 只管理开关和分类；`resourceSource: collection` 启用独立集合。旧 resources 数组仅作前端兼容，原技术熟练度模式保留。
-- 封面/截图与附件存储于 `public/resources/skills/<id>/`；目录 `.gitkeep` 保留空挂载的裁剪能力。删条目不会自动删媒体，媒体清理须单独检查引用。
+- 封面/截图与附件使用固定集合资源库 `public/resources/skills/`（兼容既有子目录），公开路径为 `/resources/skills/`；目录 `.gitkeep` 保留空挂载的裁剪能力。删条目不会自动删媒体，媒体清理须单独检查引用。
 - 共享字段规则 `src/schemas/skill-entry-contract.mjs` 同时供 Astro schema 与 `scripts/content/validate-skills.mjs` 使用；Studio 内容检查复用主题校验器，须在 studio.local.json 配置匹配的新主题路径。
 - 同步先校验 Skill 字段、分类、ID 和媒体，再物化。`skill-loader.ts` 补齐 Astro 7.2 空集合首次新增监听，并在空构建清理旧缓存。源码与 npm 集成的集合定义共用该 loader/schema。
 - 当前本机前端源为 `../shirone-content-cloud`，它跟踪 GitHub main，供右上角拉取远程更新；原 `shirone-content` 保留开发改动和私有协作文档。Studio 的本地覆盖也指向干净副本。
-- Studio 已部署独立表单；远程 Git 提交→本地同步→详情/附件已实测。浏览器 CMS 表单上传/保存交互仍待验收，不能等同于已完成线上表单测试。
+- Studio 已部署独立表单；远程 Git 提交→本地同步→详情/附件已实测。真实浏览器 CMS 新建、上传、保存重开、更新、删除、媒体清理及前端同步已通过；详见 2026-09-07 CMS 开发日志。
