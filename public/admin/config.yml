@@ -39,8 +39,8 @@ collections:
     slug: '{{fields.id}}'
     path: '{{slug}}/index'
     preview_path: '/skills/{{fields.id}}/'
-    media_folder: '/public/resources/skills/{{fields.id}}'
-    public_folder: '/resources/skills/{{fields.id}}'
+    media_folder: '/public/resources/skills/{{dirname}}'
+    public_folder: '/resources/skills/{{dirname}}'
     summary: '{{name}} · {{category}}'
     sortable_fields: [name, category]
     view_filters:
