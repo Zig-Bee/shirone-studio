@@ -26,6 +26,83 @@ media_libraries:
       max_file_size: 10485760
       slugify_filename: true
 collections:
+  - name: skills
+    label: Skill
+    label_singular: Skill
+    icon: auto_awesome
+    folder: content/skills
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    identifier_field: name
+    slug: '{{fields.id}}'
+    path: '{{slug}}/index'
+    preview_path: '/skills/{{fields.id}}/'
+    media_folder: '/public/resources/skills/{{fields.id}}'
+    public_folder: '/resources/skills/{{fields.id}}'
+    summary: '{{name}} · {{category}}'
+    sortable_fields: [name, category]
+    view_filters:
+      - { label: 草稿, field: draft, pattern: true }
+      - { label: 已公开, field: draft, pattern: false }
+    view_groups:
+      - { label: 分类, field: category }
+    fields:
+      - { name: id, label: 固定标识, widget: uuid, readonly: true, hint: 自动生成，用于稳定链接；改名不会改变链接 }
+      - { name: name, label: 名称, widget: string }
+      - { name: description, label: 用途简介, widget: text }
+      - name: category
+        label: 分类
+        widget: relation
+        collection: settings
+        file: skills
+        search_fields: ['categories.*.label']
+        value_field: 'categories.*.key'
+        display_fields: ['categories.*.label']
+      - { name: tags, label: 标签, widget: list, required: false, default: [] }
+      - name: origin
+        label: 来源类型
+        widget: select
+        options:
+          - { label: 精选分享, value: curated }
+          - { label: 自己制作, value: original }
+        default: curated
+      - { name: author, label: 作者, widget: string, required: false }
+      - { name: version, label: 版本, widget: string, required: false }
+      - { name: sourceUrl, label: 来源链接, widget: string, required: false, pattern: ['^https?://.+$', '请填写完整的 HTTP 或 HTTPS 链接'] }
+      - { name: installUrl, label: 安装说明链接, widget: string, required: false, pattern: ['^https?://.+$', '请填写完整的 HTTP 或 HTTPS 链接'] }
+      - name: cover
+        label: 封面
+        widget: image
+        required: false
+        choose_url: false
+        media_library:
+          config: { max_file_size: 10485760 }
+      - name: screenshots
+        label: 使用截图
+        widget: list
+        required: false
+        default: []
+        fields:
+          - { name: src, label: 图片, widget: image, choose_url: false }
+          - { name: alt, label: 图片说明, widget: string }
+      - name: attachments
+        label: 下载附件
+        widget: list
+        required: false
+        default: []
+        fields:
+          - { name: label, label: 下载名称, widget: string }
+          - name: src
+            label: 文件
+            widget: file
+            choose_url: false
+            media_library:
+              config: { max_file_size: 10485760 }
+            hint: 支持 ZIP、MD、TXT、JSON、YAML；不自动执行文件，最大 10 MB
+      - { name: body, label: 使用说明与个人解读, widget: markdown, required: false, hint: 建议写明用途、安装步骤、使用示例和你的解读 }
+      - { name: draft, label: 草稿（不在网站显示）, widget: boolean, default: true }
   - name: posts
     label: 文章
     label_singular: 文章
@@ -735,6 +812,20 @@ collections:
                 name: external
                 widget: boolean
                 default: true
+      - name: skills
+        label: Skill 栏目设置
+        file: config/skills.yaml
+        format: yaml
+        fields:
+          - { name: enable, label: 启用栏目, widget: boolean, default: true }
+          - { name: mode, widget: hidden, default: resources }
+          - { name: resourceSource, widget: hidden, default: collection }
+          - name: categories
+            label: 分类
+            widget: list
+            fields:
+              - { name: key, label: 固定标识, widget: string, pattern: ['^[a-z0-9][a-z0-9-]*$', '使用小写英文、数字和短横线'], hint: 有条目引用时不要删除或改动标识 }
+              - { name: label, label: 分类名称, widget: string }
       - name: sidebar
         label: 首页与侧栏布局
         file: config/sidebar.yaml
@@ -744,6 +835,12 @@ collections:
             name: enable
             widget: boolean
             default: true
+          - label: 博客两列工作区
+            name: blogWorkspace
+            widget: boolean
+            required: false
+            default: false
+            hint: 博客和文章使用分类侧栏与内容两列，主页继续沿用下方配置。
           - label: 栏数
             name: arrangement
             widget: select
@@ -801,6 +898,7 @@ collections:
                 widget: select
                 options:
                   - home
+                  - blog
                   - archive
                   - friends
                   - moments
@@ -841,6 +939,7 @@ collections:
                 options:
                   - Home
                   - Archive
+                  - Blog
                   - Friends
                   - Moments
                   - Anime

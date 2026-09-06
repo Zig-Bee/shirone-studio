@@ -44,3 +44,15 @@ test('partial overrides, shared identity and intentionally disabled music are va
   write('nav-bar',{links:[{preset:'Home'},{name:'笔记',url:'/archive/'}]});
   assert.deepEqual(validateSettings(root,cms).errors,[]);
 });
+
+test('YAML files are validated without explicit format and optional empty URLs are valid', t => {
+  const {root,write} = fixture(t);
+  const schema = {collections:[{files:[{file:'config/sample.yaml',fields:[
+    {name:'url',widget:'string',required:false,pattern:['^https?://','Invalid URL']},
+    {name:'enabled',widget:'boolean'}
+  ]}]}]};
+  write('sample',{url:'',enabled:true});
+  assert.deepEqual(validateSettings(root,schema).errors,[]);
+  write('sample',{url:'javascript:alert(1)',enabled:'yes'});
+  assert.equal(validateSettings(root,schema).errors.length,2);
+});

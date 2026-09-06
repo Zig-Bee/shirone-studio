@@ -94,6 +94,11 @@ if (!/^public_folder:\s*\/images\/uploads$/m.test(config)) {
   errors.push("CMS 配置缺少全局 public_folder");
 }
 
+try {
+  const { validateSkillContent } = await import(resolve(loadStudioConfig().shironeRoot, 'scripts/content/validate-skills.mjs'));
+  validateSkillContent(contentRoot);
+} catch (error) { errors.push(`Skill: ${error.message}`); }
+
 if (errors.length) {
   console.error(`内容检查失败（${errors.length} 项）：`);
   for (const error of errors) console.error(`- ${error}`);

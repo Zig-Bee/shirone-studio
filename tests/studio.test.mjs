@@ -63,6 +63,7 @@ test("settings select values match Shirone configuration unions", () => {
   assert.deepEqual(values(field("site", "lang")), ["zh_CN", "zh_TW", "en", "ja"]);
   assert.deepEqual(values(field("site", "wallpaperMode").fields[0]), ["banner", "none"]);
 
+  assert.equal(field("sidebar", "blogWorkspace").default, false);
   const sidebar = field("sidebar", "components");
   assert.deepEqual(values(sidebar.fields.find(item => item.name === "type")), [
     "profile", "music", "announcement", "categories", "tags", "stats", "calendar", "toc",
@@ -70,7 +71,29 @@ test("settings select values match Shirone configuration unions", () => {
   assert.deepEqual(values(sidebar.fields.find(item => item.name === "slot")), ["top", "sticky"]);
   assert.deepEqual(values(sidebar.fields.find(item => item.name === "column")), ["primary", "secondary"]);
   assert.deepEqual(values(sidebar.fields.find(item => item.name === "pages")), [
-    "home", "archive", "friends", "moments", "anime", "compass", "skills", "projects",
+    "home", "blog", "archive", "friends", "moments", "anime", "compass", "skills", "projects",
     "devices", "timeline", "albums", "about", "categories", "tags", "rss", "atom", "post",
   ]);
+});
+
+test('Skill CRUD uses stable UUID paths and separate media, with draft by default', () => {
+  const cms = parse(config);
+  const skills = cms.collections.find(c => c.name === 'skills');
+  const field = name => skills.fields.find(f => f.name === name);
+  assert.equal(skills.folder, 'content/skills');
+  assert.equal(skills.create, true);
+  assert.equal(skills.delete, true);
+  assert.equal(skills.slug, '{{fields.id}}');
+  assert.equal(skills.path, '{{slug}}/index');
+  assert.equal(field('id').widget, 'uuid');
+  assert.equal(field('id').readonly, true);
+  assert.equal(field('draft').default, true);
+  assert.equal(skills.media_folder, '/public/resources/skills/{{fields.id}}');
+  assert.equal(skills.public_folder, '/resources/skills/{{fields.id}}');
+  assert.equal(field('category').collection, 'settings');
+  assert.equal(field('category').file, 'skills');
+  const settings = cms.collections.find(c => c.name === 'settings').files.find(f => f.name === 'skills');
+  assert.equal(settings.format, 'yaml');
+  assert.equal(settings.fields.find(f => f.name === 'resourceSource').default, 'collection');
+  assert.equal(settings.fields.some(f => f.name === 'resources'), false);
 });

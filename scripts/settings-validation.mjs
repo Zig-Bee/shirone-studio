@@ -18,7 +18,7 @@ export function resolveMedia(root, reference, owner) {
 export function validateSettings(root, cms) {
   const errors = [];
   const media = [];
-  const files = cms.collections.flatMap(c => c.files ?? []).filter(f => f.format === 'yaml');
+  const files = cms.collections.flatMap(c => c.files ?? []).filter(f => (f.format === 'yaml' || /\.ya?ml$/.test(f.file)));
   function visit(value, field, owner, key, partial = true) {
     const fail = reason => errors.push(`${key}: ${reason}`);
     if (value === undefined || value === null) {
@@ -43,7 +43,7 @@ export function validateSettings(root, cms) {
     } else if (typeof value !== 'string') {
       fail('应为文字或文件路径');
     } else {
-      if (field.pattern && !new RegExp(field.pattern[0]).test(value)) fail(field.pattern[1]);
+      if (value && field.pattern && !new RegExp(field.pattern[0]).test(value)) fail(field.pattern[1]);
       if (['image','file'].includes(field.widget) && value) {
         try {
           const target = resolveMedia(root, value, owner);
