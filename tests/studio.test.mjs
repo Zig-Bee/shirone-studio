@@ -88,8 +88,8 @@ test('Skill CRUD uses stable UUID paths and separate media, with draft by defaul
   assert.equal(field('id').widget, 'uuid');
   assert.equal(field('id').readonly, true);
   assert.equal(field('draft').default, true);
-  assert.equal(skills.media_folder, '/public/resources/skills/{{dirname}}');
-  assert.equal(skills.public_folder, '/resources/skills/{{dirname}}');
+  assert.equal(skills.media_folder, '/public/resources/skills{{dirname}}');
+  assert.equal(skills.public_folder, '/resources/skills{{dirname}}');
   assert.equal(field('category').collection, 'settings');
   assert.equal(field('category').file, 'skills');
   const settings = cms.collections.find(c => c.name === 'settings').files.find(f => f.name === 'skills');
