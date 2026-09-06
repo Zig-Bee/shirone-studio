@@ -20,7 +20,8 @@
 | 社交入口 `settings/profile` | `config/profile.yaml`：`links[]` | `profileConfig.ts` → `Profile.astro`；列表删除即隐藏 |
 | 音乐开关、歌单、歌曲封面 `settings/music` | `config/music.yaml`：`enable/provider/tracks/meting/defaultVolume/defaultMode` | `src/config/musicConfig.ts` → `src/components/organisms/SideBar.astro` → `src/components/organisms/music/MusicSidebar.astro`；播放器运行时：`src/utils/music/music-runtime.ts` |
 | 公告 `settings/announcement` | `config/announcement.yaml`：`title/content/closable/link` | `src/config/announcementConfig.ts` → `src/components/molecules/Announcement.astro`；显示开关在侧栏模块中 |
-| 侧栏顺序、开关、显示页面 `settings/sidebar` | `config/sidebar.yaml`：`enable/arrangement/side/components[]` | `src/config/sidebarConfig.ts`、`src/types/sidebarConfig.ts` → `src/components/organisms/SideBar.astro` |
+| 侧栏顺序、开关、显示页面 `settings/sidebar` | `config/sidebar.yaml`：`enable/blogWorkspace/arrangement/side/components[]` | `src/config/sidebarConfig.ts`、`src/types/sidebarConfig.ts` → `src/components/organisms/SideBar.astro` |
+| 博客分类工作区 `settings/sidebar` | `config/sidebar.yaml`：`blogWorkspace`（缺省 false）；分类与标签来自公开文章 | `MainGridLayout` → `BlogWorkspaceLayout`（WorkspaceSidebar + BlogIndex）；`workspace-runtime.ts` 同步工作区，`blog-workspace.ts` 管理查询与列表返回；`Blog` 导航预设 → `/blog/` |
 | 顶部导航与子菜单 `settings/nav-bar` | `config/nav-bar.yaml`：`links[]` | `src/config/navBarConfig.ts` → `TopAppBar.astro` 及移动导航；删除入口不等于关闭路由 |
 | 文章正文、封面、草稿、置顶 `posts` | `content/posts/**/*.{md,mdx}`：frontmatter 与正文 | `src/content.config.ts` → `src/utils/content-utils.ts` → `src/components/organisms/PostPage.astro`、`PostCard.astro`、文章路由 |
 | 模板示例筛选 `posts/moments` | frontmatter：`template`（后台分类标记） | 前端只由 `draft` 决定公开性；“模板示例”本身不会自动下架内容 |
@@ -90,3 +91,21 @@ CMS 只开放已经接通“保存、同步、类型校验、页面消费”的�
 | --- | --- | --- |
 | CMS 可选日期空值 → 前端 schema | `主题/src/utils/optional-content-date.ts` → `主题/src/content.config.ts` | 空字符串、空白、null 视为未填写；非空非法值仍拒绝 |
 | 同步完成 → 浏览器更新 | `主题/src/components/organisms/TopAppBar.astro` | 独立脚本作用域与一次绑定；updated/up_to_date 均刷新，失败不刷新 |
+
+### 2026-09-06 侧栏 V2 复用边界
+
+- 身份与导航数据：`shirone-content/config/profile.yaml`、`config/navBar.yaml` → 前端 profile/navBar config → `WorkspaceSidebar.astro`；图片优化与首页 Profile 共用。
+- 页面布局：`MainGridLayout` → `BlogWorkspaceLayout` → `WorkspaceLayout`（插槽）；工具页可直接复用后两者中的通用 WorkspaceLayout + WorkspaceSidebar，无需博客索引模块。
+- 纯展示：WorkspaceIdentity、WorkspaceNavigation、CategoryFilter、ReadingNavigation；纯数据转换：workspace-navigation.ts；独立运行时：workspace-runtime.ts、reading-navigation.ts。
+- 移动导航：MainGridLayout 持久区中的 WorkspaceDrawer → SheetSide；工作区外仍使用原 SiteNavigationDrawer。
+- 博客查询/返回状态仍归 BlogIndex、blog-filter.ts、blog-workspace.ts；本轮未新增 CMS 字段或工具内容集合。
+
+### Skill 内容集合与工作区（2026-09-06）
+
+- CMS 独立 `skills` 集合 → `content/skills/<id>/index.md` → 前端 skills 内容集合 → SkillResourceIndex/SkillResourceCard → `/skills/<id>/`。UUID 保持稳定，修改名称不改变路径。
+- CMS 设置中的 Skill 只管理开关和分类；`resourceSource: collection` 启用独立集合。旧 resources 数组仅作前端兼容，原技术熟练度模式保留。
+- 封面/截图与附件存储于 `public/resources/skills/<id>/`；目录 `.gitkeep` 保留空挂载的裁剪能力。删条目不会自动删媒体，媒体清理须单独检查引用。
+- 共享字段规则 `src/schemas/skill-entry-contract.mjs` 同时供 Astro schema 与 `scripts/content/validate-skills.mjs` 使用；Studio 内容检查复用主题校验器，须在 studio.local.json 配置匹配的新主题路径。
+- 同步先校验 Skill 字段、分类、ID 和媒体，再物化。`skill-loader.ts` 补齐 Astro 7.2 空集合首次新增监听，并在空构建清理旧缓存。源码与 npm 集成的集合定义共用该 loader/schema。
+- 当前本机前端源为 `../shirone-content-cloud`，它跟踪 GitHub main，供右上角拉取远程更新；原 `shirone-content` 保留开发改动和私有协作文档。Studio 的本地覆盖也指向干净副本。
+- Studio 已部署独立表单；远程 Git 提交→本地同步→详情/附件已实测。浏览器 CMS 表单上传/保存交互仍待验收，不能等同于已完成线上表单测试。

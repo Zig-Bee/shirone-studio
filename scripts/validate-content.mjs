@@ -6,7 +6,7 @@ import { validateSettings } from "./settings-validation.mjs";
 
 const contentRoot = resolve(projectRoot, loadStudioConfig().contentRoot);
 const errors = [];
-const counts = { posts: 0, moments: 0, media: 0 };
+const counts = { posts: 0, moments: 0, media: 0, skills: 0 };
 
 function walk(directory) {
   if (!existsSync(directory)) return [];
@@ -96,7 +96,7 @@ if (!/^public_folder:\s*\/images\/uploads$/m.test(config)) {
 
 try {
   const { validateSkillContent } = await import(resolve(loadStudioConfig().shironeRoot, 'scripts/content/validate-skills.mjs'));
-  validateSkillContent(contentRoot);
+  counts.skills = validateSkillContent(contentRoot).count;
 } catch (error) { errors.push(`Skill: ${error.message}`); }
 
 if (errors.length) {
@@ -105,4 +105,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`内容检查通过：${counts.posts} 篇文章、${counts.moments} 条说说、${counts.media} 个本地媒体引用。`);
+console.log(`内容检查通过：${counts.skills} 个 Skill、${counts.posts} 篇文章、${counts.moments} 条说说、${counts.media} 个本地媒体引用。`);
